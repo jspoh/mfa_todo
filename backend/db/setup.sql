@@ -3,12 +3,23 @@ create table users(userId bigint auto_increment primary key, username varchar(30
 create table auth(userId bigint primary key, salt binary(29) not null, hash varbinary(60) not null);
 create table todos(postId bigint auto_increment primary key, userId bigint NOT NULL, content varchar(200) not null, dateCreated int not NULL, done bit DEFAULT 0);
 
-SELECT * FROM auth;
-SELECT * FROM todos t;
-SELECT * FROM users;
+-- procedures
+CREATE PROCEDURE todo_schema.createUser(IN username varchar(30), IN name varchar(30), IN salt BINARY(29), IN hash BINARY(60))
+BEGIN
+	
+	INSERT INTO users(username, name) values(username, name);
+	SET @lastId = last_insert_id(); 
+	INSERT INTO auth(userId, salt, hash) values(@lastId, salt, hash);
 
--- mistakes were made lol
-DROP TABLE todos;
+	CALL getFullUser(@lastId);
+	
+END
 
--- for testing
-INSERT INTO todos(userId, content, dateCreated) values(1, 'this is a test todo', '1624190400');
+--
+
+CREATE PROCEDURE todo_schema.getFullUser(IN userId INT)
+BEGIN
+	
+	SELECT * FROM users u INNER JOIN auth a ON u.userId = a.userId WHERE u.userId = userId;
+	
+END

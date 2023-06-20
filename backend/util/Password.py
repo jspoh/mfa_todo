@@ -3,7 +3,7 @@ import bcrypt
 
 class Password:
     def __init__(self, pwd: str) -> None:
-        self.__pwd = pwd
+        self.__pwd = pwd.encode('utf-8')
         self.__salt: bytes = bcrypt.gensalt()
         self.__hash: bytes = self.__hashPwd()
 
