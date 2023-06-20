@@ -30,6 +30,6 @@ class MySQLDatabase:
         pass
 
 
-m = MySQLDatabase()
-a = m.query('call getTodos()')
-print(a)
+# m = MySQLDatabase()
+# a = m.query('call getTodos()')
+# print(a)
