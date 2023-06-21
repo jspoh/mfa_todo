@@ -1,9 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
 
-# db
-from db.connect import MySQLDatabase
-
 # routes
 from routes.homeController import homeBp
 from routes.signupController import signupBp

@@ -1,6 +1,6 @@
 from flask import Blueprint, make_response, request
 from db.connect import sqlDb as db
-from util.sanitize import sanitizeInput
+from util.db import sanitizeInput, verifyInput
 from util.Password import Password
 
 
@@ -18,13 +18,15 @@ def newUser():
     }
     '''
     payload: dict = request.get_json()
+    (notBadReq, errMsg) = verifyInput(payload, ('username', 'name', 'password'))
+    if not notBadReq:
+        return make_response({"err": errMsg}, 400)
     payload = sanitizeInput(payload)
 
     pwd = Password(payload['password'])
 
     payload['salt'] = pwd.salt.hex()
     payload['hash'] = pwd.hash.hex()
-    print(payload)
 
     try:
         res = db.query("call createUser('{}', '{}', 0x{}, 0x{})".format(
