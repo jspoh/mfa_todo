@@ -1,10 +1,11 @@
 from flask import Flask
 from flask_cors import CORS
 
-# routes
+# routes (can also use a /api prefix)
 from routes.homeController import homeBp
 from routes.signupController import signupBp
 from routes.loginController import loginBp
+from routes.todoController import todoBp
 
 app = Flask(__name__)
 

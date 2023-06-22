@@ -18,14 +18,10 @@ DB_DATABASE=
 
 <hr>
 
-Vulnerabilities (intentional):
-- sql injection attack on login page
-
-
-
 To read more on:
 - `@login_required` decorator (flask_login module?)
 
 To do:
 - Find out sql injection vulnerabilities in this program
 - Improve security by defending against brute force attacks
+- implement sql sanitization for arrays too (list, dict, set etc.)

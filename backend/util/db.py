@@ -4,7 +4,8 @@ from typing import Tuple
 
 def sanitizeInput(payload: dict) -> dict:
     for k, v in payload.items():
-        payload[k] = re.sub("'", "''", v)
+        if type(v) == str:
+            payload[k] = re.sub("'", "''", v)
     return payload
 
 def verifyInput(payload: dict, keys: Tuple[str]) -> Tuple:
