@@ -22,18 +22,24 @@ def todoAction(id: str):
     dt = round(datetime.now().timestamp()*1000)
 
     if request.method == 'POST':
-        verifyInput(payload, ('content',))
+        (notBadReq, errMsg) = verifyInput(payload, ('content',))
+        if not notBadReq:
+            return make_response({"err": errMsg}, 400)
         payload = sanitizeInput(payload)
 
         return make_response({'STATUS': 'CREATED'}, 201)
     
     if request.method == 'PUT':
-        verifyInput(payload, ('postId', 'content', 'done'))
+        (notBadReq, errMsg) = verifyInput(payload, ('postId', 'content', 'done'))
+        if not notBadReq:
+            return make_response({"err": errMsg}, 400)
         payload = sanitizeInput(payload)
 
         return make_response({'STATUS': 'UPDATED'}, 200)
     
     # delete
-    verifyInput(payload, ('postId'))
+    (notBadReq, errMsg) = verifyInput(payload, ('postId'))
+    if not notBadReq:
+        return make_response({"err": errMsg}, 400)
 
     return make_response({'STATUS': 'DELETED'}, 200)

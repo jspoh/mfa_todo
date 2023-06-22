@@ -31,7 +31,9 @@ def login():
      
     elif request.method == 'POST':
         payload = request.get_json()
-        verifyInput(payload, ('username', 'password'))
+        (notBadReq, errMsg) = verifyInput(payload, ('username', 'password'))
+        if not notBadReq:
+            return make_response({"err": errMsg}, 400)
         # payload = sanitizeInput(payload)
 
         (salt, hash) = getSaltAndHash(payload['username'])
