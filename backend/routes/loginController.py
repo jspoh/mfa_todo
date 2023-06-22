@@ -11,7 +11,6 @@ loginBp = Blueprint('/login route', __name__)
 def getSaltAndHash(username: str) -> Tuple[bytes] | Tuple[bool | str]:
     try:
         res = db.query("call getSaltAndHash('{}')".format(username))
-        print(res)
         res = (res[0][0], res[0][1])
     except Exception as e:
         res = (False, str(e))
@@ -40,8 +39,6 @@ def login():
         if not salt:
             # return make_response({"err": str(hash)}, 403)  # for debugging
             return make_response({"err": 'invalid username or password'}, 403)
-        
-        print(payload, hash)
 
         pwd = Password(payload['password'], salt)
         if hash == pwd.hash:
