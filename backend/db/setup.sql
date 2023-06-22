@@ -17,9 +17,17 @@ END
 
 --
 
-CREATE PROCEDURE todo_schema.getFullUser(IN userId INT)
+CREATE PROCEDURE `todo_schema`.`getFullUser`(IN userId INT)
 BEGIN
 	
-	SELECT * FROM users u INNER JOIN auth a ON u.userId = a.userId WHERE u.userId = userId;
+	SELECT JSON_ARRAYAGG(JSON_OBJECT(
+		'name', name, 
+		'username', username, 
+		'salt', salt, 
+		'hash', hash
+		))
+		FROM users u INNER JOIN auth a 
+		ON u.userId = a.userId 
+		WHERE u.userId = userId;
 	
 END
