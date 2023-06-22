@@ -1,7 +1,5 @@
 from flask import Blueprint, make_response, request
 from typing import Tuple
-import json
-from base64 import b64encode
 from db.connect import sqlDb as db
 from util.db import sanitizeInput, verifyInput
 from util.Password import Password
@@ -11,7 +9,6 @@ loginBp = Blueprint('/login route', __name__)
 
 
 def getSaltAndHash(username: str) -> Tuple[bytes] | Tuple[bool | str]:
-    print(username)
     try:
         res = db.query("call getSaltAndHash('{}')".format(username))
         print(res)
