@@ -41,7 +41,8 @@ def login():
         (salt, hash) = getSaltAndHash(payload['username'])
 
         if not salt:
-            return make_response({"err": str(hash)}, 403)
+            # return make_response({"err": str(hash)}, 403)  # for debugging
+            return make_response({"err": 'invalid username or password'}, 403)
         
         print(payload, hash)
 
