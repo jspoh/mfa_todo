@@ -2,9 +2,9 @@ import bcrypt
 
 
 class Password:
-    def __init__(self, pwd: str) -> None:
+    def __init__(self, pwd: str, salt: bytes = None) -> None:
         self.__pwd = pwd.encode('utf-8')
-        self.__salt: bytes = bcrypt.gensalt()
+        self.__salt: bytes = bcrypt.gensalt() if salt is None else salt
         self.__hash: bytes = self.__hashPwd()
 
     @property

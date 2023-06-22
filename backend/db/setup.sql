@@ -31,3 +31,26 @@ BEGIN
 		WHERE u.userId = userId;
 	
 END
+
+--
+
+CREATE PROCEDURE todo_schema.getSaltAndHash(IN username VARCHAR(30))
+BEGIN
+	
+	SELECT userId INTO @id FROM users u WHERE u.username = username;
+
+	IF ROW_COUNT() > 0 THEN
+		SELECT 
+	-- 		JSON_OBJECT(
+	-- 		'salt', salt,
+	-- 		'hash', hash
+	-- 		)
+			salt, hash
+			FROM auth a WHERE a.userId = @id;
+	
+	ELSE
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'username not found';
+	
+	END IF;
+	
+END

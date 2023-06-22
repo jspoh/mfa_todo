@@ -13,9 +13,9 @@ def newUser():
     '''
     sample payload
     {
-        "username": "admin",
-        "name": "dev",
-        "password": "password"
+        "username": "dev",
+        "name": "js",
+        "password": "Developer23."
     }
     '''
     if request.method == 'GET':
