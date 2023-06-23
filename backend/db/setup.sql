@@ -2,6 +2,7 @@
 create table users(userId bigint auto_increment primary key, username varchar(30) not null, name varchar(30) not null);
 create table auth(userId bigint primary key, salt binary(29) not null, hash varbinary(60) not null);
 create table todos(postId bigint auto_increment primary key, userId bigint NOT NULL, content varchar(200) not null, dateUpdated int not NULL, done bit DEFAULT 0);
+CREATE TABLE sessions(userId bigint PRIMARY KEY, sessionId char(36) NOT NULL);
 
 -- procedures
 CREATE PROCEDURE todo_schema.createUser(IN username varchar(30), IN name varchar(30), IN salt BINARY(29), IN hash BINARY(60))
@@ -34,7 +35,7 @@ END
 
 --
 
-CREATE PROCEDURE todo_schema.getSaltAndHash(IN username VARCHAR(30))
+CREATE PROCEDURE `todo_schema`.`getSaltAndHash`(IN username VARCHAR(30))
 BEGIN
 	
 	SELECT userId INTO @id FROM users u WHERE u.username = username;
@@ -45,7 +46,7 @@ BEGIN
 	-- 		'salt', salt,
 	-- 		'hash', hash
 	-- 		)
-			salt, hash
+			a.userId, salt, hash
 			FROM auth a WHERE a.userId = @id;
 	
 	ELSE
@@ -77,5 +78,18 @@ BEGIN
 			'done', t.done
 		) FROM todos t WHERE t.postId = postId;
 	END IF;
+	
+END
+
+--
+
+CREATE PROCEDURE todo_schema.createSession(IN userId BIGINT, IN sessionId CHAR(36))
+BEGIN
+	
+-- 	only 1 session at a time (no multiple devices logged in)
+	DELETE FROM sessions s WHERE s.userId = userId;
+	INSERT INTO sessions(userId, sessionId) values(userId, sessionId);
+	SET @msg = 'session created';
+	SELECT @msg;
 	
 END
