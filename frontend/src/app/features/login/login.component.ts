@@ -56,9 +56,9 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (val) => {
           // console.log(val)
-          this.userService.userData.userId.next(val.userId);
-          this.userService.userData.username.next(val.username);
-          this.userService.userData.name.next(val.name);
+          this.userService.userData.userId$.next(val.userId);
+          this.userService.userData.username$.next(val.username);
+          this.userService.userData.name$.next(val.name);
           this.router.navigate([`/${val.username}`]);
           // window.location.replace(`/${val.username}`);
         },

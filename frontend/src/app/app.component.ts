@@ -19,9 +19,9 @@ export class AppComponent {
         next: (val) => {
           // console.log(val);
           if (val.loggedIn) {
-            userService.userData.userId.next(val.data.userId);
-            userService.userData.username.next(val.data.username);
-            userService.userData.name.next(val.data.name);
+            userService.userData.userId$.next(val.data.userId);
+            userService.userData.username$.next(val.data.username);
+            userService.userData.name$.next(val.data.name);
             console.log(`Logged in as ${val.data.username}`);
           } else {
             console.log('Guest user');
