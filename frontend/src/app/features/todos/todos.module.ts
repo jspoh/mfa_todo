@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TodosRoutingModule } from './todos-routing.module';
 import { TodosComponent } from './todos.component';
 import { Error404Module } from 'src/app/components/error404/error404.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,7 +14,9 @@ import { Error404Module } from 'src/app/components/error404/error404.module';
   imports: [
     CommonModule,
     TodosRoutingModule,
-    Error404Module
+    Error404Module,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class TodosModule { }

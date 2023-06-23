@@ -21,6 +21,17 @@ export class DataService {
    * @returns Observable. Subscribe to make request.
    */
   getUser(): Observable<any> {
-    return this.httpClient.get(`${API_DOMAIN}/user`, {withCredentials: true});
+    return this.httpClient.get(`${API_DOMAIN}/user`, { withCredentials: true });
+  }
+
+  /**
+   * Gets user created todo item(s)
+   * @param postId use `%` to get all todos
+   * @returns Observable. Subscribe to make request.
+   */
+  getTodos(postId: string | number = '%'): Observable<any> {
+    return this.httpClient.get(`${API_DOMAIN}/todo/${postId}`, {
+      withCredentials: true,
+    });
   }
 }
