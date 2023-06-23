@@ -24,4 +24,5 @@ To read more on:
 To do:
 - Find out sql injection vulnerabilities in this program
 - Improve security by defending against brute force attacks
-- implement sql sanitization for arrays too (list, dict, set etc.)
+- Implement sql sanitization for arrays too (list, dict, set etc.)
+- Implement pagination for todos (just for demostration lol)
