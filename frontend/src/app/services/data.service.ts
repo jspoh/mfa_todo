@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { CreateTodoPayload } from '../features/todos/todos.component';
 
 const API_DOMAIN = 'http://localhost:5000'; // dev only, serve static in production (not sure if js files will link with flask but express works well)
 
@@ -31,6 +32,17 @@ export class DataService {
    */
   getTodos(postId: string | number = '%'): Observable<any> {
     return this.httpClient.get(`${API_DOMAIN}/todo/${postId}`, {
+      withCredentials: true,
+    });
+  }
+
+  /**
+   * Creates a new todo item
+   * @param payload 
+   * @returns 
+   */
+  createTodo(payload: CreateTodoPayload): Observable<any> {
+    return this.httpClient.post(`${API_DOMAIN}/todo/create`, payload, {
       withCredentials: true,
     });
   }

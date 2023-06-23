@@ -14,13 +14,17 @@ def todoAction(postId: str):
     '''
     POST
     {
-        "content": "sample todo content"
+        "userId": 1,
+        "content": "sample todo content",
+        "dateUpdated": 1687530416420
     }
 
     PUT
     {
         "postId": 1,
-        "content": "sample todo content"
+        "content": "sample todo content",
+        "dateUpdated": 1687530416420
+
     }
 
     DELETE
@@ -46,7 +50,7 @@ def todoAction(postId: str):
             res['done'] = False if res['done'] == 'base64:type16:AA==' else True
 
         return make_response(res, 200)
-     
+
     payload = request.get_json()
     dt = round(datetime.now().timestamp()*1000)
 
@@ -56,16 +60,20 @@ def todoAction(postId: str):
             return make_response({"err": errMsg}, 400)
         payload = sanitizeInput(payload)
 
+        db.query("call createTodo({}, '{}', {})".format(payload['userId'],
+                                                        payload['content'], payload['dateUpdated']))
+
         return make_response({'STATUS': 'CREATED'}, 201)
-    
+
     if request.method == 'PUT':
-        (notBadReq, errMsg) = verifyInput(payload, ('postId', 'content', 'done'))
+        (notBadReq, errMsg) = verifyInput(
+            payload, ('postId', 'content', 'done'))
         if not notBadReq:
             return make_response({"err": errMsg}, 400)
         payload = sanitizeInput(payload)
 
         return make_response({'STATUS': 'UPDATED'}, 200)
-    
+
     # delete
     (notBadReq, errMsg) = verifyInput(payload, ('postId'))
     if not notBadReq:

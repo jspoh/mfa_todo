@@ -14,6 +14,12 @@ interface Todo {
   done: boolean;
 }
 
+export interface CreateTodoPayload {
+  userId: number;
+  dateUpdated: number;
+  content: string;
+}
+
 @Component({
   selector: 'app-todos',
   templateUrl: './todos.component.html',
@@ -35,19 +41,28 @@ export class TodosComponent implements OnInit {
   ) {
     this.viewingUser = router.url.replace('/', '');
     this.viewingPermissions =
-      userService.userData.username$.getValue() == this.viewingUser;
+      userService.userData.username$.getValue() == this.viewingUser &&
+      this.viewingUser != '';
 
     this.todoForm = fb.group({
       // postId: [{ value: null, disabled: false }, []],
+      userId: [
+        { value: this.userService.userData.userId$.getValue(), disabled: false },
+        [],
+      ],
       dateUpdated: [{ value: null, disabled: false }, []],
       content: [{ value: '', disabled: false }, [Validators.required]],
-      done: [{ value: false, disabled: false }, []],
+      // done: [{ value: false, disabled: false }, []],
     });
   }
 
   ngOnInit(): void {
     initTE({ Input, Ripple });
 
+    this.updateTodos();
+  }
+
+  private updateTodos() {
     this.dataService
       .getTodos()
       .pipe(take(1))
@@ -67,9 +82,17 @@ export class TodosComponent implements OnInit {
       return;
     }
 
-    const payload = this.todoForm.value;
+    const payload: CreateTodoPayload = this.todoForm.value;
     payload.dateUpdated = Date.now();
 
-    console.log(payload);
+    this.dataService
+      .createTodo(payload)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.updateTodos();
+        },
+        error: () => {},
+      });
   }
 }

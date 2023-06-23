@@ -1,7 +1,7 @@
 -- setup tables 
 create table users(userId bigint auto_increment primary key, username varchar(30) not null, name varchar(30) not null);
 create table auth(userId bigint primary key, salt binary(29) not null, hash varbinary(60) not null);
-create table todos(postId bigint auto_increment primary key, userId bigint NOT NULL, content varchar(200) not null, dateUpdated int not NULL, done bit DEFAULT 0);
+create table todos(postId bigint auto_increment primary key, userId bigint NOT NULL, content varchar(200) not null, dateUpdated BIGINT not NULL, done bit DEFAULT 0);
 CREATE TABLE sessions(userId bigint PRIMARY KEY, sessionId char(36) NOT NULL);
 
 -- procedures
@@ -108,5 +108,16 @@ BEGIN
 		'username', u.username
 	) FROM sessions s INNER JOIN users u ON s.userId = u.userId 
 	WHERE s.sessionId = sessionId;
+	
+END
+
+--
+
+CREATE PROCEDURE todo_schema.createTodo(IN userId BIGINT, IN content VARCHAR(200), IN dateUpdated BIGINT)
+BEGIN
+	
+	INSERT INTO todos(userId, content, dateUpdated, done) VALUES(userid, content, dateUpdated, 0);
+	SET @msg = 'success';
+	SELECT @msg;
 	
 END
