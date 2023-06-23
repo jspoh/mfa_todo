@@ -8,10 +8,10 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class TodosComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+  constructor(public userService: UserService) { }
 
   ngOnInit(): void {
-    
+
   }
 
 }

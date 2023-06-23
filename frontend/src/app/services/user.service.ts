@@ -15,8 +15,10 @@ export class UserService {
   };
 
   constructor() {
-    this.userData.userId$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-      this.isLoggedIn = true;
+    this.userData.userId$.pipe(takeUntil(this.unsubscribe$)).subscribe((val) => {
+      if (val) {
+        this.isLoggedIn = true;
+      }
     });
   }
 }
