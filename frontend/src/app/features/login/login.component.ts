@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from 'src/app/services/data.service';
 import { take } from 'rxjs';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -13,12 +14,17 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
   loginForm: any;
 
-  constructor(fb: FormBuilder, private dataService: DataService, private router: Router) {
+  constructor(
+    fb: FormBuilder,
+    private dataService: DataService,
+    private router: Router,
+    private userService: UserService
+  ) {
     this.loginForm = fb.group({
       username: [
         { value: '', disabled: false },
         [
-          Validators.required, 
+          Validators.required,
           // Validators.pattern(/^[a-zA-Z0-9]{5,}$/g)
         ],
       ],
@@ -48,12 +54,14 @@ export class LoginComponent implements OnInit {
       .loginUser(payload)
       .pipe(take(1))
       .subscribe({
-        next(value) {
-          console.log(value);
+        next: (val) => {
+          this.userService.username.next(val.username);
+          // this.router.navigate([`/${val.username}`]);
+          window.location.replace(`/${val.username}`);
         },
-        error(err) {
+        error: (err) => {
           console.error(err);
-        },
+        }
       });
   }
 }
