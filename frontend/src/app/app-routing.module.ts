@@ -7,10 +7,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/login/login.module').then((m) => m.LoginModule),
   },
-  // {
-  //   path: '**',
-  //   redirectTo: 'login'
-  // }
+  { path: '**', loadChildren: () => import('./features/todos/todos.module').then(m => m.TodosModule) },
 ];
 
 @NgModule({
