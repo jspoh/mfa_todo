@@ -15,4 +15,12 @@ export class DataService {
       withCredentials: true,
     });
   }
+
+  /**
+   * Gets current user by checking `session` cookie
+   * @returns Observable. Subscribe to make request.
+   */
+  getUser(): Observable<any> {
+    return this.httpClient.get(`${API_DOMAIN}/user`, {withCredentials: true});
+  }
 }

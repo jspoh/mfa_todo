@@ -83,7 +83,7 @@ END
 
 --
 
-CREATE PROCEDURE todo_schema.createSession(IN userId BIGINT, IN sessionId CHAR(36))
+CREATE PROCEDURE `todo_schema`.`createSession`(IN userId BIGINT, IN sessionId CHAR(36))
 BEGIN
 	
 -- 	only 1 session at a time (no multiple devices logged in)
@@ -91,7 +91,22 @@ BEGIN
 	INSERT INTO sessions(userId, sessionId) values(userId, sessionId);
 	SELECT JSON_OBJECT(
 		'userId', u.userId,
-		'username', u.username
+		'username', u.username,
+		'name', u.name
 	) FROM users u WHERE u.userId = userId;
+	
+END
+
+--
+
+CREATE PROCEDURE todo_schema.getUserBySessionId(IN sessionId VARCHAR(36))
+BEGIN
+	
+	SELECT JSON_OBJECT(
+		'userId', u.userId,
+		'name', u.name,
+		'username', u.username
+	) FROM sessions s INNER JOIN users u ON s.userId = u.userId 
+	WHERE s.sessionId = sessionId;
 	
 END
