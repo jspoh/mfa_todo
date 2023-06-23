@@ -9,7 +9,7 @@ from routes.todoController import todoBp
 
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, supports_credentials=True)
 
 app.register_blueprint(homeBp)
 app.register_blueprint(signupBp, url_prefix='/signup')

@@ -3,6 +3,7 @@ import { initTE, Input, Ripple } from 'tw-elements';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from 'src/app/services/data.service';
 import { take } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,11 +13,14 @@ import { take } from 'rxjs';
 export class LoginComponent implements OnInit {
   loginForm: any;
 
-  constructor(fb: FormBuilder, private dataService: DataService) {
+  constructor(fb: FormBuilder, private dataService: DataService, private router: Router) {
     this.loginForm = fb.group({
       username: [
         { value: '', disabled: false },
-        [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{5,}$/g)],
+        [
+          Validators.required, 
+          // Validators.pattern(/^[a-zA-Z0-9]{5,}$/g)
+        ],
       ],
       password: [
         { value: '', disabled: false },
@@ -35,6 +39,10 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.loginForm.invalid) {
+      return;
+    }
+
     const payload = this.loginForm.value;
     this.dataService
       .loginUser(payload)

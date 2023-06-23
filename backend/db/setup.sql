@@ -89,7 +89,9 @@ BEGIN
 -- 	only 1 session at a time (no multiple devices logged in)
 	DELETE FROM sessions s WHERE s.userId = userId;
 	INSERT INTO sessions(userId, sessionId) values(userId, sessionId);
-	SET @msg = 'session created';
-	SELECT @msg;
+	SELECT JSON_OBJECT(
+		'userId', u.userId,
+		'username', u.username
+	) FROM users u WHERE u.userId = userId;
 	
 END

@@ -1,5 +1,6 @@
 from flask import Blueprint, make_response, request
 from uuid import uuid4
+import json
 from typing import Tuple
 from db.connect import sqlDb as db
 from util.db import sanitizeInput, verifyInput
@@ -14,12 +15,12 @@ def getSaltAndHash(username: str) -> Tuple[int, bytes, bytes] | Tuple[bool, str]
         res = db.query("call getSaltAndHash('{}')".format(username))
         res = (res[0][0], res[0][1], res[0][2])
     except Exception as e:
-        res = (False, str(e))
+        res = (False, str(e), None)
     
     return res
 
 
-@loginBp.route('/', methods=['GET', 'POST'])
+@loginBp.route('', methods=['GET', 'POST'])
 def login():
     '''
     {
@@ -47,10 +48,11 @@ def login():
         if hash == pwd.hash:
             # authenticated
             sessionId = uuid4()
-            response = make_response({'STATUS': 'AUTHORIZED'}, 200)
             try:
                 res = db.query("call createSession({}, '{}')".format(userId, sessionId))
+                res = json.loads(res[0][0])
                 # print(res)
+                response = make_response(res, 200)
                 response.set_cookie('session', str(sessionId))
                 return response
             except Exception as e:
