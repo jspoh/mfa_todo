@@ -2,7 +2,7 @@
 
 - MySQL database
 - Flask api
-- React library
+- Angular framework
 
 <hr>
 
