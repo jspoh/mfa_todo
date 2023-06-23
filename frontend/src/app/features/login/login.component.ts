@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { initTE, Input, Ripple } from 'tw-elements';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DataService } from 'src/app/services/data.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +12,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent implements OnInit {
   loginForm: any;
 
-  constructor(fb: FormBuilder) {
+  constructor(fb: FormBuilder, private dataService: DataService) {
     this.loginForm = fb.group({
       username: [
         { value: '', disabled: false },
@@ -34,6 +36,16 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     const payload = this.loginForm.value;
-    console.log(payload);
+    this.dataService
+      .loginUser(payload)
+      .pipe(take(1))
+      .subscribe({
+        next(value) {
+          console.log(value);
+        },
+        error(err) {
+          console.error(err);
+        },
+      });
   }
 }
