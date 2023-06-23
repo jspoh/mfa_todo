@@ -1,7 +1,7 @@
 -- setup tables 
 create table users(userId bigint auto_increment primary key, username varchar(30) not null, name varchar(30) not null);
 create table auth(userId bigint primary key, salt binary(29) not null, hash varbinary(60) not null);
-create table todos(postId bigint auto_increment primary key, userId bigint NOT NULL, content varchar(200) not null, dateCreated int not NULL, done bit DEFAULT 0);
+create table todos(postId bigint auto_increment primary key, userId bigint NOT NULL, content varchar(200) not null, dateUpdated int not NULL, done bit DEFAULT 0);
 
 -- procedures
 CREATE PROCEDURE todo_schema.createUser(IN username varchar(30), IN name varchar(30), IN salt BINARY(29), IN hash BINARY(60))
@@ -51,6 +51,31 @@ BEGIN
 	ELSE
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'username not found';
 	
+	END IF;
+	
+END
+
+--
+
+CREATE PROCEDURE todo_schema.getTodo(IN userId BIGINT, IN postId BIGINT)
+BEGIN
+	
+	IF postId IS NULL THEN
+		SELECT JSON_ARRAYAGG(JSON_OBJECT(
+			'postId', t.postId,
+			'userId', t.userId,
+			'content', t.content,
+			'dateUpdated', t.dateUpdated,
+			'done', t.done
+		)) FROM todos t WHERE t.userId = userId;
+	ELSE
+		SELECT JSON_OBJECT(
+			'postId', t.postId,
+			'userId', t.userId,
+			'content', t.content,
+			'dateUpdated', t.dateUpdated,
+			'done', t.done
+		) FROM todos t WHERE t.postId = postId;
 	END IF;
 	
 END

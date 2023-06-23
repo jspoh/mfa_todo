@@ -14,6 +14,7 @@ CORS(app)
 app.register_blueprint(homeBp)
 app.register_blueprint(signupBp, url_prefix='/signup')
 app.register_blueprint(loginBp, url_prefix='/login')
+app.register_blueprint(todoBp, url_prefix='/todo')
 
 
 if __name__ == '__main__':
