@@ -45,12 +45,12 @@
       >
         <div class="w-[90%]">
           <p class="text-xl">{{ todo.content }}</p>
-          <span class="text-xs text-gray-500 -mt-4">{{
-            todo.dateUpdated | date
-          }}</span>
+          <span class="text-xs text-gray-500 -mt-4">
+            {{ msToDate(todo.dateUpdated) | date: 'dd/MM/yyyy HH:mm:ss' }}
+          </span>
         </div>
 
-        <div class="w-[10%] flex justify-between">
+        <div *ngIf="viewingPermissions" class="w-[10%] flex justify-between">
           <i (click)="onEditTodo(todo.postId)" class="hover:cursor-pointer hover:scale-110 transition-all duration-75 fa-solid fa-pencil"></i>
           <i (click)="onDeleteTodo(todo.postId)" class="hover:cursor-pointer hover:scale-110 transition-all duration-75 fa-solid fa-trash"></i>
           <i (click)="onMarkAsDone(todo.postId)" class="hover:cursor-pointer hover:scale-110 transition-all duration-75 fa-regular fa-circle-check"></i>

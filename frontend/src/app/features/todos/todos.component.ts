@@ -17,6 +17,7 @@ interface Todo {
   userId: number;
   content: string; // max 200 char
   dateUpdated: number; // ms
+  // dateUpdatedDateObj?: Date;
   done: boolean;
 }
 
@@ -134,5 +135,9 @@ export class TodosComponent implements OnInit {
     }
 
     this.onEditTodo(i);
+  }
+
+  public msToDate(dt: number): Date {
+    return new Date(dt);
   }
 }
