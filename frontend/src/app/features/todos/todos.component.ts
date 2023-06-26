@@ -91,6 +91,7 @@ export class TodosComponent implements OnInit {
       .subscribe({
         next: () => {
           this.updateTodos();
+          this.todoForm.reset();
         },
         error: () => {},
       });
