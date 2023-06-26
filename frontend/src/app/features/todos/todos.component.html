@@ -15,6 +15,7 @@
           class="peer block min-h-[auto] w-full rounded border-0 border-b border-black bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
           id="exampleFormControlInput3"
           placeholder="New Item"
+          maxlength="200"
         />
         <label
           for="exampleFormControlInput3"
@@ -41,19 +42,22 @@
           'border-b-2 border-neutral-100 border-opacity-100 dark:border-opacity-50':
             i < todos.length - 1
         }"
-        todoItems
+        #todoItems
       >
         <div class="w-[90%]">
-          <p class="text-xl">{{ todo.content }}</p>
+          <p class="text-xl rounded flex justify-between items-center">
+            {{ todo.content }}
+            <i *ngIf="todo.editing" (click)="onEditTodo(i)" class="fa-solid fa-right-to-bracket"></i>
+          </p>
           <span class="text-xs text-gray-500 -mt-4">
             {{ msToDate(todo.dateUpdated) | date: 'dd/MM/yyyy HH:mm:ss' }}
           </span>
         </div>
 
         <div *ngIf="viewingPermissions" class="w-[10%] flex justify-between">
-          <i (click)="onEditTodo(todo.postId)" class="hover:cursor-pointer hover:scale-110 transition-all duration-75 fa-solid fa-pencil"></i>
+          <i (click)="onEditTodoContent(i)" class="hover:cursor-pointer hover:scale-110 transition-all duration-75 fa-solid fa-pencil"></i>
           <i (click)="onDeleteTodo(todo.postId)" class="hover:cursor-pointer hover:scale-110 transition-all duration-75 fa-solid fa-trash"></i>
-          <i (click)="onMarkAsDone(todo.postId)" class="hover:cursor-pointer hover:scale-110 transition-all duration-75 fa-regular fa-circle-check"></i>
+          <i (click)="onMarkAsDone(i)" class="hover:cursor-pointer hover:scale-110 transition-all duration-75 fa-regular fa-circle-check"></i>
         </div>
       </li>
     </ul>

@@ -1,4 +1,6 @@
 import {
+  AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnInit,
@@ -19,6 +21,7 @@ interface Todo {
   dateUpdated: number; // ms
   // dateUpdatedDateObj?: Date;
   done: boolean;
+  editing?: boolean;
 }
 
 export interface CreateTodoPayload {
@@ -46,7 +49,8 @@ export class TodosComponent implements OnInit {
     private userService: UserService,
     router: Router,
     private dataService: DataService,
-    fb: FormBuilder
+    fb: FormBuilder,
+    private cdRef: ChangeDetectorRef
   ) {
     this.viewingUser = router.url.replace('/', '');
     this.viewingPermissions =
@@ -81,6 +85,7 @@ export class TodosComponent implements OnInit {
       .subscribe({
         next: (val) => {
           this.todos = val;
+          // this.cdRef.detectChanges();
         },
         error: (err) => {
           console.error(err);
@@ -109,9 +114,21 @@ export class TodosComponent implements OnInit {
       });
   }
 
-  onEditTodo(i: number) {
-    console.log(this.todoItems?.get(i));
+  onEditTodoContent(i: number) {
+    const el: ElementRef = this.todoItems!.get(i)!;
+    const contentEl: HTMLElement = el.nativeElement.children[0].children[0];
+    contentEl.contentEditable = 'true';
+    contentEl.classList.add('border-2', 'border-black');
+
+    // add done checkmark
+    // const newSpan = document.createElement('span');
+    // newSpan.innerHTML = '<i (click)="onEditTodo(i)" class="fa-solid fa-right-to-bracket"></i>';
+    // contentEl.appendChild(newSpan);
+    
+    this.todos[i].editing = true;
   }
+
+  onEditTodo(i: number) {}
 
   onDeleteTodo(i: number) {
     this.dataService
