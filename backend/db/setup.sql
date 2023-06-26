@@ -121,3 +121,14 @@ BEGIN
 	SELECT @msg;
 	
 END
+
+--
+
+CREATE PROCEDURE todo_schema.deleteTodo(IN postId BIGINT)
+BEGIN
+	
+	DELETE FROM todos t WHERE t.postId = postId;
+	SET @msg = 'Todo deleted successfully';
+	SELECT @msg;
+	
+END

@@ -8,8 +8,9 @@ from util.db import sanitizeInput, verifyInput
 todoBp = Blueprint('/todo route', __name__)
 
 
+@todoBp.route('/', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @todoBp.route('/<postId>', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def todoAction(postId: str):
+def todoAction(postId: str = None):
     userId = 1
     '''
     POST
@@ -33,7 +34,6 @@ def todoAction(postId: str):
     }
     '''
     if request.method == 'GET':
-        print(postId)
         if postId == '%':
             res = db.query("call getTodo({}, {})".format(userId, 'NULL'))
             res = json.loads(res[0][0])
@@ -50,6 +50,14 @@ def todoAction(postId: str):
             res['done'] = False if res['done'] == 'base64:type16:AA==' else True
 
         return make_response(res, 200)
+    
+    if request.method == 'DELETE':
+        try:
+            db.query("call deleteTodo({})".format(postId))
+        except Exception as e:
+            return make_response({'err': str(e)}, 500)
+
+        return make_response({'STATUS': 'DELETED'}, 200)
 
     payload = request.get_json()
     dt = round(datetime.now().timestamp()*1000)
@@ -65,18 +73,11 @@ def todoAction(postId: str):
 
         return make_response({'STATUS': 'CREATED'}, 201)
 
-    if request.method == 'PUT':
-        (notBadReq, errMsg) = verifyInput(
-            payload, ('postId', 'content', 'done'))
-        if not notBadReq:
-            return make_response({"err": errMsg}, 400)
-        payload = sanitizeInput(payload)
-
-        return make_response({'STATUS': 'UPDATED'}, 200)
-
-    # delete
-    (notBadReq, errMsg) = verifyInput(payload, ('postId'))
+    # put
+    (notBadReq, errMsg) = verifyInput(
+        payload, ('postId', 'content', 'done'))
     if not notBadReq:
         return make_response({"err": errMsg}, 400)
+    payload = sanitizeInput(payload)
 
-    return make_response({'STATUS': 'DELETED'}, 200)
+    return make_response({'STATUS': 'UPDATED'}, 200)

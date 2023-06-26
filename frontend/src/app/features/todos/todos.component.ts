@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { take } from 'rxjs';
@@ -26,6 +32,8 @@ export interface CreateTodoPayload {
   styleUrls: ['./todos.component.scss'],
 })
 export class TodosComponent implements OnInit {
+  @ViewChildren('todoItems') todoItems?: QueryList<ElementRef>;
+
   viewingUser = '';
   viewingPermissions = false; // light frontend security. need to implement server side too => frontend easy to hack
 
@@ -47,7 +55,10 @@ export class TodosComponent implements OnInit {
     this.todoForm = fb.group({
       // postId: [{ value: null, disabled: false }, []],
       userId: [
-        { value: this.userService.userData.userId$.getValue(), disabled: false },
+        {
+          value: this.userService.userData.userId$.getValue(),
+          disabled: false,
+        },
         [],
       ],
       dateUpdated: [{ value: null, disabled: false }, []],
@@ -95,5 +106,33 @@ export class TodosComponent implements OnInit {
         },
         error: () => {},
       });
+  }
+
+  onEditTodo(i: number) {
+    console.log(this.todoItems?.get(i));
+  }
+
+  onDeleteTodo(i: number) {
+    this.dataService
+      .deleteTodo(i)
+      .pipe(take(1))
+      .subscribe({
+        next: (val) => {
+          this.updateTodos();
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+  }
+
+  onMarkAsDone(i: number) {
+    if (!this.todoForm.done) {
+      this.todoForm.done = true;
+    } else {
+      this.todoForm.done = !this.todoForm.done;
+    }
+
+    this.onEditTodo(i);
   }
 }

@@ -38,11 +38,26 @@ export class DataService {
 
   /**
    * Creates a new todo item
-   * @param payload 
-   * @returns 
+   * @param payload
+   * @returns
    */
   createTodo(payload: CreateTodoPayload): Observable<any> {
     return this.httpClient.post(`${API_DOMAIN}/todo/create`, payload, {
+      withCredentials: true,
+    });
+  }
+
+  updateTodo(payload: CreateTodoPayload): Observable<any> {
+    return this.httpClient.put(`${API_DOMAIN}/todo`, payload, {
+      withCredentials: true,
+    });
+  }
+
+  deleteTodo(id: number): Observable<any> {
+    return this.httpClient.delete(`${API_DOMAIN}/todo/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
       withCredentials: true,
     });
   }
