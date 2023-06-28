@@ -54,9 +54,10 @@ def login():
                 res = json.loads(res[0][0])
                 # print(res)
                 response = make_response(res, 200)
-                response.set_cookie('session', str(sessionId), max_age=datetime.now() + timedelta(days=365))
+                oneYearExpiry = 60*60*24*365
+                response.set_cookie('session', str(sessionId), max_age=oneYearExpiry)
                 return response
-            except Exception as e:
+            except KeyError as e:
                 return make_response({'err': str(e)}, 500)
         else:
             return make_response({'err': 'invalid username or password'}, 403)
