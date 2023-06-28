@@ -38,7 +38,6 @@ def todoAction(postId: str = None):
             res = db.query("call getTodo({}, {})".format(userId, 'NULL'))
             try:
                 res = json.loads(res[0][0])
-                print(res)
             except TypeError as e:
                 # empty response
                 res = []
