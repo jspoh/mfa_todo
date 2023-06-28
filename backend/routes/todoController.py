@@ -3,6 +3,7 @@ from datetime import datetime
 import json
 from db.connect import sqlDb as db
 from util.db import sanitizeInput, verifyInput
+from util.auth import authenticateUser
 
 
 todoBp = Blueprint('/todo route', __name__)
@@ -11,9 +12,8 @@ todoBp = Blueprint('/todo route', __name__)
 @todoBp.route('', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @todoBp.route('/<postId>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def todoAction(postId: str = None):
-    print(request.cookies)
-
-    userId = 6
+    sessionCookie = request.cookies.get('session', None)
+    (userId, username, name) = authenticateUser(sessionCookie)
     '''
     POST
     {
@@ -59,7 +59,7 @@ def todoAction(postId: str = None):
     
     if request.method == 'DELETE':
         try:
-            db.query("call deleteTodo({})".format(postId))
+            db.query("call deleteTodo({}, {})".format(postId, userId))
         except Exception as e:
             return make_response({'err': str(e)}, 500)
 
@@ -75,8 +75,7 @@ def todoAction(postId: str = None):
         payload = sanitizeInput(payload)
 
         try:
-            db.query("call createTodo({}, '{}', {})".format(payload['userId'],
-                                                            payload['content'], payload['dateUpdated']))
+            db.query("call createTodo({}, '{}', {})".format(userId, payload['content'], payload['dateUpdated']))
         except Exception as e:
             return make_response({'error': str(e)}, 500)
 
@@ -89,6 +88,6 @@ def todoAction(postId: str = None):
         return make_response({"err": errMsg}, 400)
     payload = sanitizeInput(payload)
 
-    db.query("call updateTodo({}, '{}', {}, {})".format(payload['postId'], payload['content'], payload['dateUpdated'], 1 if payload['done'] else 0))
+    db.query("call updateTodo({}, '{}', {}, {})".format(payload['postId'], userId, payload['content'], payload['dateUpdated'], 1 if payload['done'] else 0))
 
     return make_response({'STATUS': 'UPDATED'}, 200)

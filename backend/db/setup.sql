@@ -125,10 +125,10 @@ END
 
 --
 
-CREATE PROCEDURE todo_schema.deleteTodo(IN postId BIGINT)
+CREATE PROCEDURE `todo_schema`.`deleteTodo`(IN postId BIGINT, IN userId BIGINT)
 BEGIN
 	
-	DELETE FROM todos t WHERE t.postId = postId;
+	DELETE FROM todos t WHERE t.postId = postId AND t.userId = userId;
 	SET @msg = 'Todo deleted successfully';
 	SELECT @msg;
 	
@@ -136,12 +136,12 @@ END
 
 --
 
-CREATE PROCEDURE todo_schema.updateTodo(IN postId BIGINT, IN content VARCHAR(200), IN dateUpdated BIGINT, IN done BIT)
+CREATE PROCEDURE todo_schema.updateTodo(IN postId BIGINT, IN userId BIGINT, IN content VARCHAR(200), IN dateUpdated BIGINT, IN done BIT)
 BEGIN
 	
 	UPDATE todos t 
 	SET t.content = content, t.dateUpdated = dateUpdated, t.done = done
-	WHERE t.postId = postid;
+	WHERE t.postId = postid AND t.userId = userId;
 
 	SET @msg = 'Updated successfully';
 	SELECT @msg;
