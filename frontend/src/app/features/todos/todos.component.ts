@@ -130,7 +130,7 @@ export class TodosComponent implements OnInit {
     this.todos[i].editing = true;
   }
 
-  onEditTodo(i: number) {
+  onEditTodo(i: number, invertDoneStatus:boolean=false) {
     this.todos[i].editing = false;
     const el: ElementRef = this.todoItems!.get(i)!;
     const contentEl: HTMLElement =
@@ -141,6 +141,9 @@ export class TodosComponent implements OnInit {
     const payload = this.todos[i];
     payload.content = contentEl.innerText;
     payload.dateUpdated = Date.now();
+    if (invertDoneStatus) {
+      payload.done = !payload.done;
+    }
     delete payload.editing;
     this.dataService
       .updateTodo(payload)
@@ -170,13 +173,7 @@ export class TodosComponent implements OnInit {
   }
 
   onMarkAsDone(i: number) {
-    if (!this.todoForm.done) {
-      this.todoForm.done = true;
-    } else {
-      this.todoForm.done = !this.todoForm.done;
-    }
-
-    this.onEditTodo(i);
+    this.onEditTodo(i, true);
   }
 
   public msToDate(dt: number): Date {

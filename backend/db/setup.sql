@@ -58,7 +58,7 @@ END
 
 --
 
-CREATE PROCEDURE todo_schema.getTodo(IN userId BIGINT, IN postId BIGINT)
+CREATE PROCEDURE `todo_schema`.`getTodo`(IN userId BIGINT, IN postId BIGINT)
 BEGIN
 	
 	IF postId IS NULL THEN
@@ -68,7 +68,8 @@ BEGIN
 			'content', t.content,
 			'dateUpdated', t.dateUpdated,
 			'done', t.done
-		)) FROM todos t WHERE t.userId = userId;
+		)) FROM todos t WHERE t.userId = userId
+		ORDER BY t.dateUpdated DESC;
 	ELSE
 		SELECT JSON_OBJECT(
 			'postId', t.postId,
@@ -129,6 +130,20 @@ BEGIN
 	
 	DELETE FROM todos t WHERE t.postId = postId;
 	SET @msg = 'Todo deleted successfully';
+	SELECT @msg;
+	
+END
+
+--
+
+CREATE PROCEDURE todo_schema.updateTodo(IN postId BIGINT, IN content VARCHAR(200), IN dateUpdated BIGINT, IN done BIT)
+BEGIN
+	
+	UPDATE todos t 
+	SET t.content = content, t.dateUpdated = dateUpdated, t.done = done
+	WHERE t.postId = postid;
+
+	SET @msg = 'Updated successfully';
 	SELECT @msg;
 	
 END

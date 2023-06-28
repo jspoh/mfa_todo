@@ -75,9 +75,11 @@ def todoAction(postId: str = None):
 
     # put
     (notBadReq, errMsg) = verifyInput(
-        payload, ('postId', 'content', 'done'))
+        payload, ('postId', 'content', 'done', 'dateUpdated'))
     if not notBadReq:
         return make_response({"err": errMsg}, 400)
     payload = sanitizeInput(payload)
+
+    db.query("call updateTodo({}, '{}', {}, {})".format(payload['postId'], payload['content'], payload['dateUpdated'], 1 if payload['done'] else 0))
 
     return make_response({'STATUS': 'UPDATED'}, 200)
