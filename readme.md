@@ -9,12 +9,12 @@
 1. `git clone https://github.com/jspoh/mfa_todo.git` clone this repository
 2. Open powershell and navigate to the project directory
 3. Install dependencies for frontend
-```powershell
+```bash
 cd frontend
 npm i
 ```
 4. Install dependencies for backend
-```powershell
+```bash
 cd ../backend
 pip install -r requirements.txt
 ```
@@ -26,9 +26,12 @@ DB_HOST=
 DB_PORT=
 DB_DATABASE=
 ```
-6. Start backend development server with `python main.py`
+6. Start backend development server with 
+```bash
+python main.py
+```
 7. Follow step 2 and then enter
-```powershell
+```bash
 cd frontend
 npm start
 ```
