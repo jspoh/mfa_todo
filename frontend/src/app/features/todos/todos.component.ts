@@ -47,19 +47,19 @@ export class TodosComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    router: Router,
+    private router: Router,
     private dataService: DataService,
     private fb: FormBuilder,
     private cdRef: ChangeDetectorRef
-  ) {
-    this.viewingUser = router.url.replace('/', '');
-    this.viewingPermissions =
-      userService.userData.username$.getValue() == this.viewingUser &&
-      this.viewingUser != '';
-  }
+  ) {}
 
   ngOnInit(): void {
     initTE({ Input, Ripple });
+
+    this.viewingUser = this.router.url.replace('/', '');
+    this.viewingPermissions =
+      this.userService.userData.username$.getValue() == this.viewingUser &&
+      this.viewingUser != '';
 
     this.initTodoForm();
     this.updateTodos();
