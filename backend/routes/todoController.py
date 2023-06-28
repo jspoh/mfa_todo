@@ -36,7 +36,12 @@ def todoAction(postId: str = None):
     if request.method == 'GET':
         if postId == '%':
             res = db.query("call getTodo({}, {})".format(userId, 'NULL'))
-            res = json.loads(res[0][0])
+            try:
+                res = json.loads(res[0][0])
+                print(res)
+            except TypeError as e:
+                # empty response
+                res = []
 
             for todoItem in res:
                 todoItem['done'] = False if todoItem['done'] == 'base64:type16:AA==' else True
@@ -68,8 +73,11 @@ def todoAction(postId: str = None):
             return make_response({"err": errMsg}, 400)
         payload = sanitizeInput(payload)
 
-        db.query("call createTodo({}, '{}', {})".format(payload['userId'],
-                                                        payload['content'], payload['dateUpdated']))
+        try:
+            db.query("call createTodo({}, '{}', {})".format(payload['userId'],
+                                                            payload['content'], payload['dateUpdated']))
+        except Exception as e:
+            return make_response({'error': str(e)}, 500)
 
         return make_response({'STATUS': 'CREATED'}, 201)
 

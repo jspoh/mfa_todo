@@ -49,15 +49,24 @@ export class TodosComponent implements OnInit {
     private userService: UserService,
     router: Router,
     private dataService: DataService,
-    fb: FormBuilder,
+    private fb: FormBuilder,
     private cdRef: ChangeDetectorRef
   ) {
     this.viewingUser = router.url.replace('/', '');
     this.viewingPermissions =
       userService.userData.username$.getValue() == this.viewingUser &&
       this.viewingUser != '';
+  }
 
-    this.todoForm = fb.group({
+  ngOnInit(): void {
+    initTE({ Input, Ripple });
+
+    this.initTodoForm();
+    this.updateTodos();
+  }
+
+  private initTodoForm() {
+    this.todoForm = this.fb.group({
       // postId: [{ value: null, disabled: false }, []],
       userId: [
         {
@@ -70,12 +79,6 @@ export class TodosComponent implements OnInit {
       content: [{ value: '', disabled: false }, [Validators.required]],
       // done: [{ value: false, disabled: false }, []],
     });
-  }
-
-  ngOnInit(): void {
-    initTE({ Input, Ripple });
-
-    this.updateTodos();
   }
 
   private updateTodos() {
@@ -108,7 +111,7 @@ export class TodosComponent implements OnInit {
       .subscribe({
         next: () => {
           this.updateTodos();
-          this.todoForm.reset();
+          this.initTodoForm();
         },
         error: () => {},
       });
@@ -140,9 +143,10 @@ export class TodosComponent implements OnInit {
 
     const payload = this.todos[i];
     payload.content = contentEl.innerText;
-    payload.dateUpdated = Date.now();
     if (invertDoneStatus) {
       payload.done = !payload.done;
+    } else {
+      payload.dateUpdated = Date.now();
     }
     delete payload.editing;
     this.dataService
