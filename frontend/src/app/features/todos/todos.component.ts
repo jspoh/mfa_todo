@@ -1,5 +1,5 @@
 import {
-  AfterViewInit,
+  OnDestroy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { take } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { DataService } from 'src/app/services/data.service';
 import { UserService } from 'src/app/services/user.service';
 import { initTE, Input, Ripple } from 'tw-elements';
@@ -35,7 +35,7 @@ export interface CreateTodoPayload {
   templateUrl: './todos.component.html',
   styleUrls: ['./todos.component.scss'],
 })
-export class TodosComponent implements OnInit {
+export class TodosComponent implements OnInit, OnDestroy {
   @ViewChildren('todoItems') todoItems?: QueryList<ElementRef>;
 
   viewingUser = '';
@@ -44,6 +44,8 @@ export class TodosComponent implements OnInit {
   todos: Todo[] = [];
 
   todoForm: any;
+
+  $unsubscribe = new Subject<void>();
 
   constructor(
     private userService: UserService,
@@ -61,8 +63,20 @@ export class TodosComponent implements OnInit {
       this.userService.userData.username$.getValue() == this.viewingUser &&
       this.viewingUser != '';
 
+    // check if user in userService is updated (some browsers might be slow and show 404 page and never recover afterwards)
+    this.userService.userData.username$
+      .pipe(takeUntil(this.$unsubscribe))
+      .subscribe((username) => {
+        this.viewingPermissions = username == this.viewingUser && this.viewingUser != '';
+      });
+
     this.initTodoForm();
     this.updateTodos();
+  }
+
+  ngOnDestroy(): void {
+    this.$unsubscribe.next();
+    this.$unsubscribe.complete();
   }
 
   private initTodoForm() {
@@ -133,7 +147,7 @@ export class TodosComponent implements OnInit {
     this.todos[i].editing = true;
   }
 
-  onEditTodo(i: number, invertDoneStatus:boolean=false) {
+  onEditTodo(i: number, invertDoneStatus: boolean = false) {
     this.todos[i].editing = false;
     const el: ElementRef = this.todoItems!.get(i)!;
     const contentEl: HTMLElement =
