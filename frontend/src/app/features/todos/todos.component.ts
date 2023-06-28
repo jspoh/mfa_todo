@@ -116,19 +116,44 @@ export class TodosComponent implements OnInit {
 
   onEditTodoContent(i: number) {
     const el: ElementRef = this.todoItems!.get(i)!;
-    const contentEl: HTMLElement = el.nativeElement.children[0].children[0];
+    const contentEl: HTMLElement =
+      el.nativeElement.children[0].children[0].children[0];
     contentEl.contentEditable = 'true';
     contentEl.classList.add('border-2', 'border-black');
+    contentEl.focus();
 
     // add done checkmark
     // const newSpan = document.createElement('span');
     // newSpan.innerHTML = '<i (click)="onEditTodo(i)" class="fa-solid fa-right-to-bracket"></i>';
     // contentEl.appendChild(newSpan);
-    
+
     this.todos[i].editing = true;
   }
 
-  onEditTodo(i: number) {}
+  onEditTodo(i: number) {
+    this.todos[i].editing = false;
+    const el: ElementRef = this.todoItems!.get(i)!;
+    const contentEl: HTMLElement =
+      el.nativeElement.children[0].children[0].children[0];
+    contentEl.contentEditable = 'false';
+    contentEl.classList.remove('border-2', 'border-black');
+
+    const payload = this.todos[i];
+    payload.content = contentEl.innerText;
+    payload.dateUpdated = Date.now();
+    delete payload.editing;
+    this.dataService
+      .updateTodo(payload)
+      .pipe(take(1))
+      .subscribe({
+        next: (val) => {
+          this.updateTodos();
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+  }
 
   onDeleteTodo(i: number) {
     this.dataService

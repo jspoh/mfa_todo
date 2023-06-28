@@ -46,8 +46,8 @@
       >
         <div class="w-[90%]">
           <p class="text-xl rounded flex justify-between items-center">
-            {{ todo.content }}
-            <i *ngIf="todo.editing" (click)="onEditTodo(i)" class="fa-solid fa-right-to-bracket"></i>
+            <span class="w-full">{{ todo.content }}</span>
+            <i *ngIf="todo.editing" (click)="onEditTodo(i)" class="fa-solid fa-right-to-bracket hover:cursor-pointer hover:scale-110 transition-all duration-75"></i>
           </p>
           <span class="text-xs text-gray-500 -mt-4">
             {{ msToDate(todo.dateUpdated) | date: 'dd/MM/yyyy HH:mm:ss' }}
