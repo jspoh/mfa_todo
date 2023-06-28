@@ -5,6 +5,7 @@ from typing import Tuple
 from db.connect import sqlDb as db
 from util.db import sanitizeInput, verifyInput
 from util.Password import Password
+from datetime import datetime, timedelta
 
 
 loginBp = Blueprint('/login route', __name__)
@@ -53,7 +54,7 @@ def login():
                 res = json.loads(res[0][0])
                 # print(res)
                 response = make_response(res, 200)
-                response.set_cookie('session', str(sessionId))
+                response.set_cookie('session', str(sessionId), max_age=datetime.now() + timedelta(days=365))
                 return response
             except Exception as e:
                 return make_response({'err': str(e)}, 500)
