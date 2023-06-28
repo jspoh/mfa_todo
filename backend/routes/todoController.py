@@ -88,6 +88,6 @@ def todoAction(postId: str = None):
         return make_response({"err": errMsg}, 400)
     payload = sanitizeInput(payload)
 
-    db.query("call updateTodo({}, '{}', {}, {})".format(payload['postId'], userId, payload['content'], payload['dateUpdated'], 1 if payload['done'] else 0))
+    db.query("call updateTodo({}, {}, '{}', {}, {})".format(payload['postId'], userId, payload['content'], payload['dateUpdated'], 1 if payload['done'] else 0))
 
     return make_response({'STATUS': 'UPDATED'}, 200)

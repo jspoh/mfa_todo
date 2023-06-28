@@ -68,13 +68,13 @@ export class TodosComponent implements OnInit {
   private initTodoForm() {
     this.todoForm = this.fb.group({
       // postId: [{ value: null, disabled: false }, []],
-      userId: [
-        {
-          value: this.userService.userData.userId$.getValue(),
-          disabled: false,
-        },
-        [],
-      ],
+      // userId: [
+      //   {
+      //     value: this.userService.userData.userId$.getValue(),
+      //     disabled: false,
+      //   },
+      //   [],
+      // ],
       dateUpdated: [{ value: null, disabled: false }, []],
       content: [{ value: '', disabled: false }, [Validators.required]],
       // done: [{ value: false, disabled: false }, []],
