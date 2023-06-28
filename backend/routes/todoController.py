@@ -11,7 +11,7 @@ todoBp = Blueprint('/todo route', __name__)
 @todoBp.route('/', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @todoBp.route('/<postId>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def todoAction(postId: str = None):
-    userId = 1
+    userId = 6
     '''
     POST
     {
