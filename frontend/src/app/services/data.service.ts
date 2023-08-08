@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreateTodoPayload } from '../features/todos/todos.component';
 
-const API_DOMAIN = 'http://localhost:5000'; // dev only, serve static in production (not sure if js files will link with flask but express works well)
+const API_DOMAIN = 'http://localhost:5000/api'; // dev only, serve static in production (not sure if js files will link with flask but express works well)
 
 @Injectable({
   providedIn: 'root',

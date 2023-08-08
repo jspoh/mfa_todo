@@ -101,7 +101,7 @@ export class TodosComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe({
         next: (val) => {
-          this.todos = val;
+          this.todos = val.reverse();
           // this.cdRef.detectChanges();
         },
         error: (err) => {
