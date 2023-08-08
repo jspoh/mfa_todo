@@ -17,6 +17,12 @@ export class DataService {
     });
   }
 
+  signupUser(payload: any): Observable<any> {
+    return this.httpClient.post(`${API_DOMAIN}/signup`, payload, {
+      withCredentials: true
+    });
+  }
+
   /**
    * Gets current user by checking `session` cookie
    * @returns Observable. Subscribe to make request.

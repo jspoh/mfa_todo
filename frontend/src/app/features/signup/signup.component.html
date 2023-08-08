@@ -1,0 +1,15 @@
+<form (submit)="onSignup()" [formGroup]="signupForm">
+  <div>
+    <label>Name</label>
+    <input class="border" type="text" formControlName="name" />
+  </div>
+  <div>
+    <label>Username</label>
+    <input class="border" type="text" formControlName="username" />
+  </div>
+  <div>
+    <label>Password</label>
+    <input class="border" type="password" formControlName="password" />
+  </div>
+  <button class="shadow-2xl border rounded-lg p-2 bg-blue-300" type="submit">Sign up</button>
+</form>

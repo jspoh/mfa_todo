@@ -11,6 +11,7 @@ const routes: Routes = [
     canActivate: [UserIsNotLoggedIn]
   },
   { path: 'login', redirectTo: '' },
+  { path: 'signup', loadChildren: () => import('./features/signup/signup.module').then(m => m.SignupModule) },
   { path: '**', loadChildren: () => import('./features/todos/todos.module').then(m => m.TodosModule), canActivate: [UserIsLoggedInGuard] },
 ];
 

@@ -32,9 +32,9 @@ export class LoginComponent implements OnInit {
         { value: '', disabled: false },
         [
           Validators.required,
-          Validators.pattern(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()|:;'"><,.\/?_=+-]).{8,}$/g
-          ),
+          // Validators.pattern(
+          //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()|:;'"><,.\/?_=+-]).{8,}$/g
+          // ),
         ],
       ],
     });
