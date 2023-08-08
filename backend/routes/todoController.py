@@ -43,6 +43,9 @@ def todoAction(postId: str = None):
             except TypeError as e:
                 # empty response
                 res = []
+            except IndexError as e:
+                print(e, res)
+                res = []
 
             for todoItem in res:
                 todoItem['done'] = False if todoItem['done'] == 'base64:type16:AA==' else True

@@ -5,16 +5,26 @@ create table todos(postId bigint auto_increment primary key, userId bigint NOT N
 CREATE TABLE sessions(userId bigint PRIMARY KEY, sessionId char(36) NOT NULL);
 
 -- procedures
-CREATE PROCEDURE todo_schema.createUser(IN username varchar(30), IN name varchar(30), IN salt BINARY(29), IN hash BINARY(60))
+CREATE PROCEDURE `todo_schema`.`createUser`(IN p_username varchar(30), IN p_name varchar(30), IN p_salt BINARY(29), IN p_hash BINARY(60))
 BEGIN
-	
-	INSERT INTO users(username, name) values(username, name);
-	SET @lastId = last_insert_id(); 
-	INSERT INTO auth(userId, salt, hash) values(@lastId, salt, hash);
+	DECLARE usernameCount INT;
 
-	CALL getFullUser(@lastId);
-	
+	-- Check if the username already exists
+	SELECT COUNT(*) INTO usernameCount FROM users WHERE username = p_username;
+
+	IF usernameCount > 0 THEN
+		-- Username already exists, raise an error
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Username already exists';
+	ELSE
+		-- Username doesn't exist, proceed with insertion
+		INSERT INTO users(username, name) VALUES(p_username, p_name);
+		SET @lastId = LAST_INSERT_ID(); 
+		INSERT INTO auth(userId, salt, hash) VALUES(@lastId, p_salt, p_hash);
+
+		CALL getFullUser(@lastId);
+	END IF;
 END
+
 
 --
 
@@ -22,6 +32,7 @@ CREATE PROCEDURE `todo_schema`.`getFullUser`(IN userId INT)
 BEGIN
 	
 	SELECT JSON_ARRAYAGG(JSON_OBJECT(
+		'userId', userId,
 		'name', name, 
 		'username', username, 
 		'salt', salt, 

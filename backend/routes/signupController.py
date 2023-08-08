@@ -8,7 +8,7 @@ from util.Password import Password
 signupBp = Blueprint('/signup route', __name__)
 
 
-@signupBp.route('/', methods=['GET', 'POST'])
+@signupBp.route('', methods=['GET', 'POST'])
 def newUser():
     '''
     sample payload

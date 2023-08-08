@@ -8,6 +8,9 @@ def authenticateUser(cookie: str):
     :returns tuple: `(userId, username, name)`
     '''
     res = db.query("call getUserBySessionId('{}')".format(cookie))
-    res = json.loads(res[0][0])
+    try:
+        res = json.loads(res[0][0])
+    except Exception as e:
+        print(res)
 
     return (res['userId'], res['username'], res['name'])
